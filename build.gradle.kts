@@ -24,6 +24,9 @@ dependencies {
     implementation("com.h2database:h2:2.2.224")
     implementation("org.xerial:sqlite-jdbc:3.45.3.0")
 
+    implementation("io.ktor:ktor-server-openapi:2.3.10")
+    implementation("io.ktor:ktor-server-swagger:2.3.10")
+
     testImplementation("io.ktor:ktor-server-tests:2.3.10")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.2.0")
     testImplementation("io.mockk:mockk:1.13.10")
