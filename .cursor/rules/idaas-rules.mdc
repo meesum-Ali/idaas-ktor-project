@@ -1,0 +1,64 @@
+---
+alwaysApply: true
+---
+
+Project-Level Rules
+	•	Single Responsibility Principle (SRP): Each file/class must have exactly one responsibility.
+	•	Separation of Concerns: Clearly delineate between layers (routing, services, repositories, models).
+	•	Consistency: Adhere to Kotlin/Ktor conventions consistently.
+	•	Clean Code: Follow SOLID principles, avoiding overly complex methods/functions.
+
+Routing Layer
+	•	Keep route handlers minimal; delegate logic clearly to services.
+	•	Avoid business logic directly in route definitions.
+	•	Clearly define HTTP status codes and error handling.
+
+Service Layer
+	•	Each service method has clearly defined responsibilities.
+	•	Services orchestrate between routing and repository layers.
+	•	Encapsulate validations, error handling, and business logic here.
+
+Repository Layer
+	•	Repositories handle direct interactions with databases or external storage.
+	•	Limit repositories to basic CRUD operations and simple queries.
+	•	Clearly separate queries from commands.
+
+Model Layer
+	•	Use Kotlin data class for entities and value objects.
+	•	Clearly enforce business rules and invariants in constructors or factory methods.
+	•	Distinguish clearly between entities (identifiable) and value objects (immutable).
+
+Utility and Helper Functions
+	•	Clearly organize utilities and extensions in logical, dedicated packages.
+	•	Ensure helpers are concise, reusable, and clearly documented.
+
+Error Handling
+	•	Use Kotlin’s built-in mechanisms (require, check, and exceptions) explicitly.
+	•	Clearly handle coroutine exceptions and errors with descriptive messages.
+	•	Prefer Result type for handling predictable failures.
+
+Coroutine Usage
+	•	Clearly mark suspending functions using the suspend keyword.
+	•	Use structured concurrency explicitly (coroutineScope).
+	•	Avoid blocking operations inside coroutines.
+
+Testing
+	•	Clearly separate Arrange-Act-Assert (AAA) in unit tests.
+	•	Mock dependencies explicitly using Mokkery or similar.
+	•	Write tests focused clearly on behavior verification.
+
+Formatting & Style
+	•	Follow Kotlin official coding conventions rigorously.
+	•	Enforce a maximum line length of 120 characters.
+	•	Use consistent indentation (4 spaces preferred).
+
+Security & Compliance
+	•	Clearly handle sensitive data, ensuring secure storage and transmission.
+	•	Adhere explicitly to compliance standards (GDPR, HIPAA, SOC2).
+	•	Implement explicit audit logging for identity-related events.
+
+Integration & Identity Management
+	•	Clearly use standard identity protocols (OIDC, OAuth2, JWT).
+	•	Explicitly define roles, permissions, and authorization policies (RBAC/ABAC).
+	•	Clearly document SSO and federation integration points.
+
