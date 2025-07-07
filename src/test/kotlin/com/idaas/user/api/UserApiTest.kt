@@ -29,7 +29,6 @@ fun Application.testUserApi(
     updateUserProfileService: UpdateUserProfileService,
     deleteUserService: DeleteUserService
 ) {
-    install(ContentNegotiation) { json() }
     routing {
         post("/users") {
             val req = call.receive<UserRequest>()
@@ -62,12 +61,16 @@ fun Application.testUserApi(
 class UserApiTest {
     @Test
     fun `should register user via API (BDD)`() = testApplication {
+        environment {
+            config = io.ktor.server.config.MapApplicationConfig()
+        }
         // Given
         val registerUserService = mockk<RegisterUserService>()
         val user = User(id = "id-1", email = "apiuser@example.com", name = "API User", phone = "+1234567890")
         every { registerUserService.register(user.email, user.name, user.phone) } returns user
         // When
         application {
+            install(ContentNegotiation) { json() }
             testUserApi(
                 registerUserService = registerUserService,
                 updateUserProfileService = mockk(relaxed = true),
@@ -89,6 +92,9 @@ class UserApiTest {
 
     @Test
     fun `should update user via API (BDD)`() = testApplication {
+        environment {
+            config = io.ktor.server.config.MapApplicationConfig()
+        }
         // Given
         val updateUserProfileService = mockk<UpdateUserProfileService>()
         val user = User(id = "id-1", email = "apiuser@example.com", name = "API User", phone = "+1234567890")
@@ -96,6 +102,7 @@ class UserApiTest {
         every { updateUserProfileService.updateProfile(user.email, updatedUser.name, updatedUser.phone) } returns updatedUser
         // When
         application {
+            install(ContentNegotiation) { json() }
             testUserApi(
                 registerUserService = mockk(relaxed = true),
                 updateUserProfileService = updateUserProfileService,
@@ -117,11 +124,15 @@ class UserApiTest {
 
     @Test
     fun `should delete user via API (BDD)`() = testApplication {
+        environment {
+            config = io.ktor.server.config.MapApplicationConfig()
+        }
         // Given
         val deleteUserService = mockk<DeleteUserService>()
         every { deleteUserService.deleteByEmail("apiuser@example.com") } just Runs
         // When
         application {
+            install(ContentNegotiation) { json() }
             testUserApi(
                 registerUserService = mockk(relaxed = true),
                 updateUserProfileService = mockk(relaxed = true),
@@ -141,11 +152,15 @@ class UserApiTest {
 
     @Test
     fun `should return 404 when deleting non-existent user via API (BDD)`() = testApplication {
+        environment {
+            config = io.ktor.server.config.MapApplicationConfig()
+        }
         // Given
         val deleteUserService = mockk<DeleteUserService>()
         every { deleteUserService.deleteByEmail("notfound@example.com") } throws IllegalArgumentException("User not found")
         // When
         application {
+            install(ContentNegotiation) { json() }
             testUserApi(
                 registerUserService = mockk(relaxed = true),
                 updateUserProfileService = mockk(relaxed = true),
