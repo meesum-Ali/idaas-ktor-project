@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  idaas-api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: idaas
+      POSTGRES_PASSWORD: idaas123
+      POSTGRES_DB: idaasdb
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
