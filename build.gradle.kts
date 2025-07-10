@@ -23,6 +23,12 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.50.1")
     implementation("com.h2database:h2:2.2.224")
     implementation("org.xerial:sqlite-jdbc:3.45.3.0")
+    implementation("org.mindrot:jbcrypt:0.4") // Added jbcrypt for password hashing
+
+    // JWT Libraries
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5") // For JSON processing with Jackson
 
     implementation("io.ktor:ktor-server-openapi:2.3.10")
     implementation("io.ktor:ktor-server-swagger:2.3.10")

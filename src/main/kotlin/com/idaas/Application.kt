@@ -5,6 +5,8 @@ import com.idaas.user.api.UserRequest
 import com.idaas.user.application.RegisterUserService
 import com.idaas.user.application.UpdateUserProfileService
 import com.idaas.user.application.DeleteUserService
+import com.idaas.user.application.LoginUserService
+import com.idaas.jwt.JwtService // Import JwtService
 import com.idaas.user.infrastructure.DbUserRepository
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -41,12 +43,22 @@ fun Application.module() {
     val registerUserService = RegisterUserService(userRepo)
     val updateUserProfileService = UpdateUserProfileService(userRepo)
     val deleteUserService = DeleteUserService(userRepo)
+    val loginUserService = LoginUserService(userRepo)
+    val jwtService = JwtService() // Instantiate JwtService
+
     routing {
         get("/") {
             call.respondText("Welcome to Identity-as-a-Service API!")
         }
         route("/api") {
-            userApi(registerUserService, updateUserProfileService, deleteUserService)
+            // Pass LoginUserService and JwtService to userApi
+            userApi(
+                registerUserService,
+                updateUserProfileService,
+                deleteUserService,
+                loginUserService,
+                jwtService // Pass JwtService
+            )
         }
         openAPI(path = "/openapi")
         swaggerUI(path = "/swagger", swaggerFile = "/openapi")
