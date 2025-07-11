@@ -13,6 +13,8 @@ object UsersTable : Table("users") {
     val email = varchar("email", 255).uniqueIndex()
     val name = varchar("name", 255)
     val phone = varchar("phone", 20)
+    val hashedPassword = varchar("hashed_password", 255).nullable()
+    val roles = varchar("roles", 255).default("USER") // Store roles as comma-separated string
     override val primaryKey = PrimaryKey(id)
 }
 
@@ -32,6 +34,8 @@ class DbUserRepository(private val db: Database) : UserRepository {
                     it[email] = user.email
                     it[name] = user.name
                     it[phone] = user.phone
+                    it[hashedPassword] = user.hashedPassword
+                    it[roles] = user.roles.joinToString(",")
                 }
             } else {
                 UsersTable.insert {
@@ -39,6 +43,8 @@ class DbUserRepository(private val db: Database) : UserRepository {
                     it[email] = user.email
                     it[name] = user.name
                     it[phone] = user.phone
+                    it[hashedPassword] = user.hashedPassword
+                    it[roles] = user.roles.joinToString(",")
                 }
             }
         }
@@ -51,7 +57,9 @@ class DbUserRepository(private val db: Database) : UserRepository {
                     id = row[UsersTable.id],
                     email = row[UsersTable.email],
                     name = row[UsersTable.name],
-                    phone = row[UsersTable.phone]
+                    phone = row[UsersTable.phone],
+                    hashedPassword = row[UsersTable.hashedPassword],
+                    roles = row[UsersTable.roles].split(',').map { it.trim() }.filter { it.isNotEmpty() }
                 )
             }
             .singleOrNull()
@@ -65,7 +73,9 @@ class DbUserRepository(private val db: Database) : UserRepository {
                     id = row[UsersTable.id],
                     email = row[UsersTable.email],
                     name = row[UsersTable.name],
-                    phone = row[UsersTable.phone]
+                    phone = row[UsersTable.phone],
+                    hashedPassword = row[UsersTable.hashedPassword],
+                    roles = row[UsersTable.roles].split(',').map { it.trim() }.filter { it.isNotEmpty() }
                 )
             }
             .singleOrNull().also { println("[DbUserRepository] Found user: $it") }
@@ -77,13 +87,21 @@ class DbUserRepository(private val db: Database) : UserRepository {
         }
     }
 
+    override fun deleteById(id: String) { // Correct placement
+        transaction(db) {
+            UsersTable.deleteWhere { UsersTable.id eq id }
+        }
+    }
+
     override fun findAll(): List<User> = transaction(db) {
         UsersTable.selectAll().map { row ->
             User(
                 id = row[UsersTable.id],
                 email = row[UsersTable.email],
                 name = row[UsersTable.name],
-                phone = row[UsersTable.phone]
+                phone = row[UsersTable.phone],
+                hashedPassword = row[UsersTable.hashedPassword],
+                roles = row[UsersTable.roles].split(',').map { it.trim() }.filter { it.isNotEmpty() }
             )
         }
     }
@@ -93,4 +111,4 @@ class DbUserRepository(private val db: Database) : UserRepository {
             drop(UsersTable)
         }
     }
-} 
+}

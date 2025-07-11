@@ -11,7 +11,9 @@ data class User(
     val id: String = UUID.randomUUID().toString(),
     val email: String,
     val name: String,
-    val phone: String
+    val phone: String,
+    val hashedPassword: String? = null, // Nullable for now, will be set during registration
+    val roles: List<String> = listOf("USER") // Default role
 ) {
     init {
         require(id.isNotBlank()) { "Id must not be blank" }
